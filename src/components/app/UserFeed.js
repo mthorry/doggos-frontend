@@ -57,12 +57,28 @@ class UserFeed extends React.Component {
 	}
 
 	removeLike = (e) => {
-		console.log("UNLIKE!")
+		let thisPhoto = this.state.photos.filter( photo => { return photo.id == e.target.dataset.id })[0]
+		console.log(thisPhoto.liked, !thisPhoto.liked)
+		let otherPhotos = this.state.photos.filter( photo => { return photo.id != e.target.dataset.id})
+
+		axios
+		.delete(`/api/${e.target.dataset.username}/photos/${e.target.dataset.id}/likes`)
+			.then( res => {
+				console.log(res.data)
+				this.setState({
+					photos: [thisPhoto, ...otherPhotos]
+				})
+			})
+		.catch(err => {
+			console.log(`feed err`, err);
+		})
 	}
 
   render() {
     const { users, photos, likes, allUsers } = this.state;
     const { user } = this.props;
+
+    console.log(photos)
 
  	photos.forEach( photo => {
  		photo.likes = []
