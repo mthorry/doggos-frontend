@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Link, Switch, Route } from "react-router-dom";
+import PhotoFeedItem from './PhotoFeedItem'
 // import "../../user-feed.css";
 const moment = require('moment');
 
@@ -15,8 +16,8 @@ class UserFeed extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.getFeedPhotos()
 		this.getPhotoLikes()
+		this.getFeedPhotos()
 	}
 
 	getFeedPhotos = () => {
@@ -24,20 +25,21 @@ class UserFeed extends React.Component {
 		.get(`/api/${this.props.user.username}/feed`)
 			.then(res => {
 				let photos = res.data.feed
-			this.setState({
-				photos
-			});
-		})
+				this.setState({
+					photos
+				});
+			})
 		.catch(err => {
 			console.log(`feed err`, err);
 		});
 	}
 
 	getPhotoLikes = () => {
-		let {photos} = this.state
+		console.log("getPhotoLikes")
 		axios
-		.get('/api/likes')
+		.get('/api/photos/likes')
 			.then( res => {
+				console.log('likes', res.data.likes)
 				this.setState({
 					likes: res.data.likes
 				})
@@ -82,8 +84,10 @@ class UserFeed extends React.Component {
     const { users, photos, likes, allUsers } = this.state;
     const { user } = this.props;
 
-    console.log("RENDER")
+    console.log("photos", photos)
+    console.log("likes", likes)
 
+//move photo.forEach into 'getPhotos' function
  	photos.forEach( photo => {
  		photo.likes = []
  		photo.liked = false
@@ -100,20 +104,7 @@ class UserFeed extends React.Component {
  	})
 
     let feedPhotos = photos.map(photo => (
-          <div className="photo" key={photo.id} id={photo.id}>
-              <h3 className="p-bold">{photo.username}</h3>
-              <p>{ `${moment(photo.date_created).fromNow()}` }</p>
-            <img src={photo.url} alt={photo.caption} width="400" />
-            <div className="likes-comments">
-            <h4> {photo.likes.length} { photo.likes.length > 1 || photo.likes.length == 0 ? `borks` : `bork` } {photo.liked ? <i className="fas fa-heart"/> : `♡` }</h4>
-            	<p>{!photo.liked ? <button onClick={this.addLike} data-id={photo.id} data-username={photo.username}>Add a bork!</button> : <button onClick={this.removeLike} data-id={photo.id} data-username={photo.username}>Un-bork! 💔</button>  }</p>
-            </div>
-            <div className="photo-bottom">
-              <p className="p-caption">{photo.caption} </p>
-            </div>
-            <br/>
-		<hr/>
-          </div>
+    	<PhotoFeedItem photo={photo} addLike={this.addLike} removeLike={this.removeLike}/>
         ))
 
     return (

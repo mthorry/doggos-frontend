@@ -68,7 +68,7 @@ class NewUser extends React.Component {
       <div className="signup-container">
         <div id="register-box">
 
-          <h1 id="app-name" > ClonestaGram </h1>
+          <h1 id="app-name" > Doggos </h1>
           <h4>Sign Up to share photos and videos of yourself-ish with your friends.</h4>
           <button type="button" className="button"> <i className="fab fa-facebook-square"> </i> Log in with Facebook</button>
           <p> ------------------ OR ------------------ </p>

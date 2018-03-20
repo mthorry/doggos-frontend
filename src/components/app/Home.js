@@ -80,7 +80,7 @@ class Home extends React.Component {
             </div>
           </div>
         </div>
-        <Route exact path="/" component={this.renderFeed} />
+        <Route exact path="/home" component={this.renderFeed} />
         <Route exact path="/profile" component={this.renderProfile} />
         <Route exact path="/profile/edit" component={this.renderEditProfile} />
         <Route exact path="/user/:id" user={user} component={UserProfile} />
