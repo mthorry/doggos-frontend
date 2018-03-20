@@ -3,16 +3,16 @@ import axios from "axios";
 import { Link, Switch, Route } from "react-router-dom";
 
 
-class UserProfile extends React.Component {
+class EditProfile extends React.Component {
 
 	render() {
 		return(
 			<div>
-			<p> UserProfile </p>
+			<p> EditProfile </p>
 			</div>
 		)
 	}
 
 }
 
-export default UserProfile
+export default EditProfile

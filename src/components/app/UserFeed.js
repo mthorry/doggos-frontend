@@ -34,7 +34,6 @@ class UserFeed extends React.Component {
 	}
 
 	getPhotoLikes = () => {
-// router.get('/api/:username/photos/:photo_id/likes', db.getPhotoLikes);
 		let {photos} = this.state
 		axios
 		.get('/api/likes')
@@ -46,27 +45,32 @@ class UserFeed extends React.Component {
 	}
 
 	addLike = (e) => {
-		// e.preventDefault()
-		// console.log(e.target.dataset, e.target.dataset.id, e.target.dataset.username)
+		let newLike = {username: this.props.user.username, photo_id: e.target.dataset.id}
+		this.setState({
+			likes: [...this.state.likes, newLike]
+		})
 		axios
 		.post(`/api/${e.target.dataset.username}/photos/${e.target.dataset.id}/likes`)
-			.then( this.getPhotoLikes() )
 		.catch(err => {
 			console.log(`feed err`, err);
 		});
 	}
 
 	removeLike = (e) => {
-		let thisPhoto = this.state.photos.filter( photo => { return photo.id == e.target.dataset.id })[0]
-		console.log(thisPhoto.liked, !thisPhoto.liked)
-		let otherPhotos = this.state.photos.filter( photo => { return photo.id != e.target.dataset.id})
+		// console.log(this.state.likes, e.target.dataset.id, this.props.user.username)
+		let removeLike = this.state.likes.filter( like => {return like.photo_id == e.target.dataset.id && like.username == this.props.user.username})[0]
+		let newLikes = this.state.likes.filter( like => { return like != removeLike})
+
+		// let thisPhoto = this.state.photos.filter( photo => { return photo.id == e.target.dataset.id })[0]
+		// console.log(thisPhoto.liked, !thisPhoto.liked)
+		// let otherPhotos = this.state.photos.filter( photo => { return photo.id != e.target.dataset.id})
 
 		axios
 		.delete(`/api/${e.target.dataset.username}/photos/${e.target.dataset.id}/likes`)
 			.then( res => {
 				console.log(res.data)
 				this.setState({
-					photos: [thisPhoto, ...otherPhotos]
+					likes: newLikes
 				})
 			})
 		.catch(err => {
@@ -78,7 +82,7 @@ class UserFeed extends React.Component {
     const { users, photos, likes, allUsers } = this.state;
     const { user } = this.props;
 
-    console.log(photos)
+    console.log("RENDER")
 
  	photos.forEach( photo => {
  		photo.likes = []
