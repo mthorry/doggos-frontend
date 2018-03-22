@@ -1,9 +1,9 @@
 import React from "react";
 import axios from "axios";
-import { Link, Switch, Route } from "react-router-dom";
+// import { Link, Switch, Route } from "react-router-dom";
 import PhotoFeedItem from './PhotoFeedItem'
 // import "../../user-feed.css";
-const moment = require('moment');
+// const moment = require('moment');
 
 
 class UserFeed extends React.Component {
@@ -35,11 +35,9 @@ class UserFeed extends React.Component {
 	}
 
 	getPhotoLikes = () => {
-		console.log("getPhotoLikes")
 		axios
 		.get('/api/photos/likes')
 			.then( res => {
-				console.log('likes', res.data.likes)
 				this.setState({
 					likes: res.data.likes
 				})
@@ -47,7 +45,7 @@ class UserFeed extends React.Component {
 	}
 
 	addLike = (e) => {
-		let newLike = {username: this.props.user.username, photo_id: e.target.dataset.id}
+		let newLike = {liker: this.props.user.username, photo_id: e.target.dataset.id}
 		this.setState({
 			likes: [...this.state.likes, newLike]
 		})
@@ -59,13 +57,8 @@ class UserFeed extends React.Component {
 	}
 
 	removeLike = (e) => {
-		// console.log(this.state.likes, e.target.dataset.id, this.props.user.username)
-		let removeLike = this.state.likes.filter( like => {return like.photo_id == e.target.dataset.id && like.username == this.props.user.username})[0]
+		let removeLike = this.state.likes.filter( like => {return like.photo_id == e.target.dataset.id && like.liker == this.props.user.username})[0]
 		let newLikes = this.state.likes.filter( like => { return like != removeLike})
-
-		// let thisPhoto = this.state.photos.filter( photo => { return photo.id == e.target.dataset.id })[0]
-		// console.log(thisPhoto.liked, !thisPhoto.liked)
-		// let otherPhotos = this.state.photos.filter( photo => { return photo.id != e.target.dataset.id})
 
 		axios
 		.delete(`/api/${e.target.dataset.username}/photos/${e.target.dataset.id}/likes`)
@@ -84,10 +77,6 @@ class UserFeed extends React.Component {
     const { users, photos, likes, allUsers } = this.state;
     const { user } = this.props;
 
-    console.log("photos", photos)
-    console.log("likes", likes)
-
-//move photo.forEach into 'getPhotos' function
  	photos.forEach( photo => {
  		photo.likes = []
  		photo.liked = false
@@ -97,14 +86,14 @@ class UserFeed extends React.Component {
  			}
  		})
  		photo.likes.forEach( like =>{
- 			if (like.username == user.username) {
+ 			if (like.liker == user.username) {
  				photo.liked = true
  			}
  		})
  	})
 
     let feedPhotos = photos.map(photo => (
-    	<PhotoFeedItem photo={photo} addLike={this.addLike} removeLike={this.removeLike}/>
+    	<PhotoFeedItem key={photo.id} photo={photo} addLike={this.addLike} removeLike={this.removeLike}/>
         ))
 
     return (

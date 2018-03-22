@@ -4,7 +4,7 @@ import "./App.css";
 import Home from "./components/app/Home";
 import LoginUser from "./components/login/LoginUser";
 import NewUser from "./components/login/NewUser";
-import { Route, Link, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 class App extends Component {
   constructor() {
@@ -86,6 +86,7 @@ class App extends Component {
 
   render() {
     const { active } = this.state;
+    console.log("APP PROPS ", this.props)
     return (
       <div>
         <Switch>
